@@ -75,7 +75,6 @@ export const DataTable = <T,>({
                     key={getRowKey(row)}
                     onClick={onRowClick ? () => onRowClick(row) : undefined}
                     onKeyDown={onRowClick ? (event) => handleRowKeyDown(event, row) : undefined}
-                    role={onRowClick ? "button" : undefined}
                     tabIndex={onRowClick ? 0 : undefined}
                   >
                     {columns.map((column) => (

@@ -231,6 +231,72 @@ export const PaginationButton = styled.button`
   }
 `;
 
+export const DialogOverlay = styled.div`
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background-color: rgba(17, 24, 39, 0.5);
+`;
+
+export const DialogContent = styled.div`
+  width: min(100%, 36rem);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border-radius: 0.5rem;
+  background-color: white;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+`;
+
+export const DialogHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+`;
+
+export const DialogCloseButton = styled.button`
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+`;
+
+export const DialogBody = styled.div`
+  padding: 1.25rem;
+`;
+
+export const DialogDetails = styled.dl`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.375rem;
+  margin: 0;
+
+  div {
+    display: grid;
+    gap: 0.375rem;
+  }
+
+  dt {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  dd {
+    margin: 0;
+    color: #4b5563;
+  }
+`;
+
 export const TableHeaderWrapper = styled.thead`
   background-color: #f9fafb; /* Slightly darker background to differentiate the header */
 `;

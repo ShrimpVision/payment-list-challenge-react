@@ -1,10 +1,14 @@
+import { useState } from "react";
 import { Container, Title } from "../../components/components";
 import { I18N } from "../../constants/i18n";
+import type { Payment } from "../../types/payment";
+import { PaymentDetailsDialog } from "./PaymentDetailsDialog";
 import { PaymentsPagination } from "./PaymentsPagination";
 import { PaymentsTable } from "./PaymentsTable";
 import { usePaymentsPage } from "./usePaymentsPage";
 
 export const PaymentsPage = () => {
+  const [selectedPayment, setSelectedPayment] = useState<Payment>();
   const {
     currencyValue,
     hasActiveFilters,
@@ -44,9 +48,16 @@ export const PaymentsPage = () => {
           ) : undefined
         }
         requestError={requestError}
+        onRowClick={setSelectedPayment}
         searchValue={searchValue}
         validationError={validationError}
       />
+      {selectedPayment && (
+        <PaymentDetailsDialog
+          onClose={() => setSelectedPayment(undefined)}
+          payment={selectedPayment}
+        />
+      )}
     </Container>
   );
 };

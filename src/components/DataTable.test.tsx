@@ -81,14 +81,16 @@ describe("DataTable", () => {
   test("keeps rows non-interactive without an onRowClick callback", () => {
     renderTable();
 
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    expect(screen.getByRole("row", { name: /Ada Lovelace Active/i })).not.toHaveAttribute(
+      "tabindex",
+    );
   });
 
   test("calls onRowClick with the selected row when clicked", () => {
     const onRowClick = vi.fn();
     renderTable({ onRowClick });
 
-    fireEvent.click(screen.getByRole("button", { name: /Ada Lovelace Active/i }));
+    fireEvent.click(screen.getByRole("row", { name: /Ada Lovelace Active/i }));
 
     expect(onRowClick).toHaveBeenCalledOnce();
     expect(onRowClick).toHaveBeenCalledWith(users[0]);
@@ -98,7 +100,7 @@ describe("DataTable", () => {
     const onRowClick = vi.fn();
     renderTable({ onRowClick });
 
-    const row = screen.getByRole("button", { name: /Ada Lovelace Active/i });
+    const row = screen.getByRole("row", { name: /Ada Lovelace Active/i });
     fireEvent.keyDown(row, { key: "Enter" });
     fireEvent.keyDown(row, { key: " " });
     fireEvent.keyDown(row, { key: "Escape" });

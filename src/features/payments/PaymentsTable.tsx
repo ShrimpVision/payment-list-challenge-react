@@ -19,6 +19,7 @@ interface PaymentsTableProps {
   onClearFilters?: () => void;
   requestError?: string;
   pagination?: ReactNode;
+  onRowClick?: (payment: Payment) => void;
 }
 
 const paymentColumns: DataTableColumn<Payment>[] = [
@@ -69,6 +70,7 @@ export const PaymentsTable = ({
   onClearFilters,
   requestError,
   pagination,
+  onRowClick,
 }: PaymentsTableProps) => {
   const feedbackMessage = validationError ?? requestError;
   const toolbar =
@@ -98,6 +100,7 @@ export const PaymentsTable = ({
       getRowKey={(payment) => payment.id}
       isLoading={isLoading}
       footer={pagination}
+      onRowClick={onRowClick}
       toolbar={toolbar}
     />
   );

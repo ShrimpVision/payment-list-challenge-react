@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { delay, http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
@@ -52,7 +52,29 @@ describe("PaymentsPage", () => {
     renderPaymentsPage();
 
     expect(await screen.findByText("pay_134_1")).toBeInTheDocument();
-    expect(screen.getAllByRole("row")).toHaveLength(6);
+    expect(screen.getAllByRole("button", { name: /pay_134_/i })).toHaveLength(5);
+  });
+
+  test("opens payment details from a table row and closes them with Escape", async () => {
+    server.use(http.get(`*${API_URL}`, () => HttpResponse.json(firstPageResponse)));
+
+    renderPaymentsPage();
+
+    await screen.findByText("pay_134_1");
+    fireEvent.click(screen.getByRole("button", { name: /pay_134_1/i }));
+
+    const dialog = screen.getByRole("dialog", { name: /payment details: pay_134_1/i });
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText(mockPayments134[0].customerName!)).toBeInTheDocument();
+    expect(within(dialog).getByText("250.00")).toBeInTheDocument();
+    expect(within(dialog).getByText(mockPayments134[0].currency!)).toBeInTheDocument();
+    expect(within(dialog).getByText(mockPayments134[0].status)).toBeInTheDocument();
+    expect(within(dialog).getByText(mockPayments134[0].customerAddress!)).toBeInTheDocument();
+    expect(within(dialog).getByText(mockPayments134[0].description!)).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
   test("navigates between payment pages and reuses a cached previous page", async () => {
