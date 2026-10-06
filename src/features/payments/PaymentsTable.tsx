@@ -39,7 +39,7 @@ const paymentColumns: DataTableColumn<Payment>[] = [
     id: "status",
     header: I18N.TABLE_HEADER_STATUS,
     cell: (payment) => (
-      <StatusBadge status={payment.status}>{payment.status}</StatusBadge>
+      <StatusBadge $status={payment.status}>{payment.status}</StatusBadge>
     ),
   },
 ];
