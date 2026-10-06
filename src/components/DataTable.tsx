@@ -27,6 +27,7 @@ interface DataTableProps<T> {
   isLoading?: boolean;
   onRowClick?: (row: T) => void;
   toolbar?: ReactNode;
+  footer?: ReactNode;
 }
 
 export const DataTable = <T,>({
@@ -37,6 +38,7 @@ export const DataTable = <T,>({
   isLoading = false,
   onRowClick,
   toolbar,
+  footer,
 }: DataTableProps<T>) => {
   const handleRowKeyDown = (event: KeyboardEvent<HTMLTableRowElement>, row: T) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -89,6 +91,7 @@ export const DataTable = <T,>({
             <Spinner aria-label="Loading" role="status" />
           </TableLoadingState>
         )}
+        {footer}
       </TableWrapper>
     </>
   );

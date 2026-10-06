@@ -55,6 +55,44 @@ describe("PaymentsPage", () => {
     expect(screen.getAllByRole("row")).toHaveLength(6);
   });
 
+  test("navigates between payment pages and reuses a cached previous page", async () => {
+    const receivedPages: string[] = [];
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const page = new URL(request.url).searchParams.get("page")!;
+        receivedPages.push(page);
+        const isSecondPage = page === "2";
+        const payments = isSecondPage ? [mockPayments134[1]] : [mockPayments134[0]];
+
+        return HttpResponse.json({
+          payments,
+          total: 10,
+          page: Number(page),
+          pageSize: 5,
+        });
+      }),
+    );
+
+    renderPaymentsPage();
+
+    expect(await screen.findByText("pay_134_1")).toBeInTheDocument();
+    expect(screen.getByText(`${I18N.PAGE_LABEL} 1`)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: I18N.PREVIOUS_BUTTON })).toBeDisabled();
+    expect(screen.getByRole("button", { name: I18N.NEXT_BUTTON })).toBeEnabled();
+
+    fireEvent.click(screen.getByRole("button", { name: I18N.NEXT_BUTTON }));
+
+    expect(await screen.findByText("pay_134_2")).toBeInTheDocument();
+    expect(screen.getByText(`${I18N.PAGE_LABEL} 2`)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: I18N.PREVIOUS_BUTTON })).toBeEnabled();
+    expect(screen.getByRole("button", { name: I18N.NEXT_BUTTON })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("button", { name: I18N.PREVIOUS_BUTTON }));
+
+    expect(await screen.findByText("pay_134_1")).toBeInTheDocument();
+    expect(receivedPages).toEqual(["1", "2"]);
+  });
+
   test("submits a formatted payment ID only after Search is clicked", async () => {
     const receivedSearches: Array<string | null> = [];
     server.use(

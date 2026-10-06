@@ -72,6 +72,12 @@ describe("DataTable", () => {
     expect(screen.getByRole("table")).toBeInTheDocument();
   });
 
+  test("renders optional footer content below the table", () => {
+    renderTable({ footer: <nav aria-label="Table pagination">Page 1</nav> });
+
+    expect(screen.getByRole("navigation", { name: "Table pagination" })).toHaveTextContent("Page 1");
+  });
+
   test("keeps rows non-interactive without an onRowClick callback", () => {
     renderTable();
 

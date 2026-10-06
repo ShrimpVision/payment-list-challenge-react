@@ -3,11 +3,13 @@ import { Container, Title } from "../../components/components";
 import { I18N } from "../../constants/i18n";
 import type { Payment } from "../../types/payment";
 import { isInternalServerError, isNotFoundError } from "./errors";
+import { PaymentsPagination } from "./PaymentsPagination";
 import { PaymentsTable } from "./PaymentsTable";
 import { formatPaymentIdSearch, isValidPaymentIdSearch } from "./search";
 import { useGetPayments } from "./usePayments";
 
-const INITIAL_PAYMENTS_QUERY = { page: 1, pageSize: 5 };
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 5;
 const EMPTY_PAYMENTS: Payment[] = [];
 
 export const PaymentsPage = () => {
@@ -16,13 +18,14 @@ export const PaymentsPage = () => {
   const [currencyInput, setCurrencyInput] = useState("");
   const [currency, setCurrency] = useState("");
   const [searchError, setSearchError] = useState<string>();
+  const [page, setPage] = useState(DEFAULT_PAGE);
 
-  const paymentsQuery = paymentIdSearch || currency
-    ? {
-        ...(paymentIdSearch && { search: paymentIdSearch }),
-        ...(currency && { currency }),
-      }
-    : INITIAL_PAYMENTS_QUERY;
+  const paymentsQuery = {
+    page,
+    pageSize: DEFAULT_PAGE_SIZE,
+    ...(paymentIdSearch && { search: paymentIdSearch }),
+    ...(currency && { currency }),
+  };
 
   const { data, error, isPending } = useGetPayments(paymentsQuery);
   
@@ -46,6 +49,7 @@ export const PaymentsPage = () => {
     setPaymentIdInput(formattedSearch);
     setPaymentIdSearch(formattedSearch);
     setCurrency(currencyInput);
+    setPage(DEFAULT_PAGE);
   };
 
   const handleSearchChange = (value: string) => {
@@ -63,6 +67,7 @@ export const PaymentsPage = () => {
     setCurrencyInput("");
     setCurrency("");
     setSearchError(undefined);
+    setPage(DEFAULT_PAGE);
   };
 
   return (
@@ -77,6 +82,16 @@ export const PaymentsPage = () => {
         onSearch={handleSearch}
         onSearchChange={handleSearchChange}
         payments={data?.payments ?? EMPTY_PAYMENTS}
+        pagination={
+          data ? (
+            <PaymentsPagination
+              onPageChange={setPage}
+              page={data.page}
+              pageSize={data.pageSize}
+              total={data.total}
+            />
+          ) : undefined
+        }
         requestError={errorMessage}
         searchValue={paymentIdInput}
         validationError={searchError}

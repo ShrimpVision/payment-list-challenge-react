@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { DataTable, type DataTableColumn } from "../../components/DataTable";
 import { ErrorBox, StatusBadge } from "../../components/components";
 import { I18N } from "../../constants/i18n";
@@ -17,6 +18,7 @@ interface PaymentsTableProps {
   hasActiveFilters?: boolean;
   onClearFilters?: () => void;
   requestError?: string;
+  pagination?: ReactNode;
 }
 
 const paymentColumns: DataTableColumn<Payment>[] = [
@@ -66,6 +68,7 @@ export const PaymentsTable = ({
   hasActiveFilters,
   onClearFilters,
   requestError,
+  pagination,
 }: PaymentsTableProps) => {
   const feedbackMessage = validationError ?? requestError;
   const toolbar =
@@ -94,6 +97,7 @@ export const PaymentsTable = ({
       emptyMessage={I18N.NO_PAYMENTS_FOUND}
       getRowKey={(payment) => payment.id}
       isLoading={isLoading}
+      footer={pagination}
       toolbar={toolbar}
     />
   );
