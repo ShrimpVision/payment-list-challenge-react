@@ -1,5 +1,6 @@
 import { API_URL } from "../../constants";
 import type { GetPaymentsResponse } from "../../types/payment";
+import { GetPaymentsApiError } from "./errors";
 
 export interface GetPaymentsParams {
   page?: number;
@@ -28,7 +29,7 @@ export const getPayments = async ({
   const response = await fetch(`${API_URL}?${queryParams.toString()}`);
 
   if (!response.ok) {
-    throw new Error(`Unable to fetch payments: ${response.status}`);
+    throw new GetPaymentsApiError(response.status);
   }
 
   return response.json() as Promise<GetPaymentsResponse>;

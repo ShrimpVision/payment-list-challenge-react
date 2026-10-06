@@ -1,5 +1,5 @@
 import { DataTable, type DataTableColumn } from "../../components/DataTable";
-import { StatusBadge } from "../../components/components";
+import { ErrorBox, StatusBadge } from "../../components/components";
 import { I18N } from "../../constants/i18n";
 import type { Payment } from "../../types/payment";
 import { formatAmount, formatPaymentDate } from "./formatters";
@@ -9,11 +9,12 @@ interface PaymentsTableProps {
   payments: Payment[];
   isLoading?: boolean;
   searchValue?: string;
-  searchError?: string;
+  validationError?: string;
   onSearchChange?: (value: string) => void;
   onSearch?: () => void;
   hasActiveFilters?: boolean;
   onClearFilters?: () => void;
+  requestError?: string;
 }
 
 const paymentColumns: DataTableColumn<Payment>[] = [
@@ -55,23 +56,30 @@ export const PaymentsTable = ({
   payments,
   isLoading,
   searchValue,
-  searchError,
+  validationError,
   onSearchChange,
   onSearch,
   hasActiveFilters,
   onClearFilters,
+  requestError,
 }: PaymentsTableProps) => {
+  const feedbackMessage = validationError ?? requestError;
   const toolbar =
     searchValue !== undefined && onSearchChange && onSearch ? (
       <PaymentsToolbar
         onSearch={onSearch}
         onSearchChange={onSearchChange}
-        searchError={searchError}
+        feedbackMessage={feedbackMessage}
         searchValue={searchValue}
+        validationError={validationError}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={onClearFilters}
       />
     ) : undefined;
+
+  if (requestError) {
+    return toolbar ?? <ErrorBox role="alert">{requestError}</ErrorBox>;
+  }
 
   return (
     <DataTable

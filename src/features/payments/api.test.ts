@@ -3,6 +3,7 @@ import { http, HttpResponse } from "msw";
 import { API_URL } from "../../constants";
 import { server } from "../../mocks/node";
 import { mockPayments134 } from "../../mocks/mockPaymentsData";
+import { GetPaymentsApiError } from "./errors";
 import { getPayments } from "./api";
 
 beforeAll(() => server.listen());
@@ -63,5 +64,16 @@ describe("getPayments", () => {
     expect(receivedSearch).toBe("pay_134_1");
     expect(receivedPage).toBeNull();
     expect(receivedPageSize).toBeNull();
+  });
+
+  test("throws a typed error for an unsuccessful response", async () => {
+    server.use(
+      http.get(`*${API_URL}`, () =>
+        HttpResponse.json({ message: "Payment not found" }, { status: 404 }),
+      ),
+    );
+
+    await expect(getPayments({ search: "pay_404" })).rejects.toBeInstanceOf(GetPaymentsApiError);
+    await expect(getPayments({ search: "pay_404" })).rejects.toMatchObject({ status: 404 });
   });
 });

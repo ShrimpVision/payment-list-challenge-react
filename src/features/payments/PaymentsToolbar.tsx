@@ -12,7 +12,8 @@ interface PaymentsToolbarProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   onSearch: () => void;
-  searchError?: string;
+  validationError?: string;
+  feedbackMessage?: string;
   hasActiveFilters?: boolean;
   onClearFilters?: () => void;
 }
@@ -21,7 +22,8 @@ export const PaymentsToolbar = ({
   searchValue,
   onSearchChange,
   onSearch,
-  searchError,
+  validationError,
+  feedbackMessage,
   hasActiveFilters = false,
   onClearFilters,
 }: PaymentsToolbarProps) => {
@@ -35,8 +37,8 @@ export const PaymentsToolbar = ({
       <FilterRow>
         <SearchInput
           aria-label={I18N.SEARCH_LABEL}
-          aria-describedby={searchError ? "payment-id-search-error" : undefined}
-          aria-invalid={Boolean(searchError)}
+          aria-describedby={validationError ? "payment-id-search-error" : undefined}
+          aria-invalid={Boolean(validationError)}
           onChange={(event) => onSearchChange(event.target.value)}
           placeholder={I18N.SEARCH_PLACEHOLDER}
           type="search"
@@ -49,9 +51,9 @@ export const PaymentsToolbar = ({
           </ClearButton>
         )}
       </FilterRow>
-      {searchError && (
+      {feedbackMessage && (
         <ErrorBox id="payment-id-search-error" role="alert">
-          {searchError}
+          {feedbackMessage}
         </ErrorBox>
       )}
     </form>

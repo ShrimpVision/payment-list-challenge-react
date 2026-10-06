@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Container, Title } from "../../components/components";
 import { I18N } from "../../constants/i18n";
 import type { Payment } from "../../types/payment";
+import { isNotFoundError } from "./errors";
 import { PaymentsTable } from "./PaymentsTable";
 import { formatPaymentIdSearch, isValidPaymentIdSearch } from "./search";
 import { useGetPayments } from "./usePayments";
@@ -13,10 +14,18 @@ export const PaymentsPage = () => {
   const [paymentIdInput, setPaymentIdInput] = useState("");
   const [paymentIdSearch, setPaymentIdSearch] = useState("");
   const [searchError, setSearchError] = useState<string>();
+
   const paymentsQuery = paymentIdSearch
     ? { search: paymentIdSearch }
     : INITIAL_PAYMENTS_QUERY;
-  const { data, isPending } = useGetPayments(paymentsQuery);
+
+  const { data, error, isPending } = useGetPayments(paymentsQuery);
+  
+  const errorMessage = error
+    ? isNotFoundError(error)
+      ? I18N.PAYMENT_NOT_FOUND
+      : I18N.SOMETHING_WENT_WRONG
+    : undefined;
 
   const handleSearch = () => {
     const formattedSearch = formatPaymentIdSearch(paymentIdInput);
@@ -52,8 +61,9 @@ export const PaymentsPage = () => {
         onSearch={handleSearch}
         onSearchChange={handleSearchChange}
         payments={data?.payments ?? EMPTY_PAYMENTS}
-        searchError={searchError}
+        requestError={errorMessage}
         searchValue={paymentIdInput}
+        validationError={searchError}
       />
     </Container>
   );

@@ -141,4 +141,69 @@ describe("PaymentsPage", () => {
     expect(screen.queryByRole("button", { name: I18N.CLEAR_FILTERS })).not.toBeInTheDocument();
     expect(await screen.findByText("pay_134_2")).toBeInTheDocument();
   });
+
+  test("shows a 4xx search error without rendering the table", async () => {
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const search = new URL(request.url).searchParams.get("search");
+
+        if (search === "pay_404") {
+          return HttpResponse.json({ message: "Payment not found" }, { status: 404 });
+        }
+
+        return HttpResponse.json({
+          payments: [mockPayments134[0]],
+          total: 1,
+          page: 1,
+          pageSize: 5,
+        });
+      }),
+    );
+
+    renderPaymentsPage();
+
+    await screen.findByText("pay_134_1");
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search payments" }), {
+      target: { value: "pay_404" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(I18N.PAYMENT_NOT_FOUND);
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: I18N.CLEAR_FILTERS })).toBeInTheDocument();
+  });
+
+  test("shows a generic error for a non-404 response without rendering the table", async () => {
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const search = new URL(request.url).searchParams.get("search");
+
+        if (search === "pay_500") {
+          return HttpResponse.json({ message: "Internal server error" }, { status: 500 });
+        }
+
+        return HttpResponse.json({
+          payments: [mockPayments134[0]],
+          total: 1,
+          page: 1,
+          pageSize: 5,
+        });
+      }),
+    );
+
+    renderPaymentsPage();
+
+    await screen.findByText("pay_134_1");
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search payments" }), {
+      target: { value: "pay_500" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(I18N.SOMETHING_WENT_WRONG);
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    expect(screen.getByRole("searchbox", { name: "Search payments" })).not.toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+  });
 });
