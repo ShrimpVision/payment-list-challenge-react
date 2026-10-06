@@ -29,14 +29,23 @@ export const I18N = {
   PREVIOUS_BUTTON: "◀ Previous",
   NEXT_BUTTON: "Next ▶",
   PAGE_LABEL: "Page",
+
+  // Payment details
+  PAYMENT_DETAILS_TITLE: "Payment details",
+  CUSTOMER_ADDRESS: "Customer address",
+  DESCRIPTION: "Description",
+  CLIENT_ID: "Client ID",
+  CLOSE: "Close",
   
   // Messages
   NO_PAYMENTS_FOUND: "No payments found.",
   PAYMENT_NOT_FOUND: "Payment not found.",
   INTERNAL_SERVER_ERROR: "Internal server error. Please try again later.",
   SOMETHING_WENT_WRONG: "Something went wrong!",
+  INVALID_PAYMENT_ID:
+    "Enter a payment ID that starts with 'pay_'",
   
   // Fallback values
   EMPTY_CUSTOMER: "—",
   EMPTY_CURRENCY: "—",
-} as const; 
+} as const;

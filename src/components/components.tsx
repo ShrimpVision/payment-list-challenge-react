@@ -41,6 +41,8 @@ export const FilterRow = styled.div`
 `;
 
 export const SearchInput = styled.input`
+  box-sizing: border-box;
+  height: 2.625rem;
   width: 100%;
   padding: 0.5rem 1rem;
   border: 1px solid #d1d5db;
@@ -59,6 +61,8 @@ export const SearchInput = styled.input`
 `;
 
 export const Select = styled.select`
+  box-sizing: border-box;
+  height: 2.625rem;
   padding: 0.5rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
@@ -78,6 +82,8 @@ export const Select = styled.select`
 `;
 
 export const SearchButton = styled.button`
+  box-sizing: border-box;
+  height: 2.625rem;
   padding: 0.5rem 1rem;
   background-color: rgb(61, 108, 209);
   color: white;
@@ -147,16 +153,16 @@ export const TableCell = styled.td`
   color: #4b5563;
 `;
 
-export const StatusBadge = styled.span<{ status: string }>`
+export const StatusBadge = styled.span<{ $status: string }>`
   padding: 0.25rem 0.75rem;
   border-radius: 0.375rem;
   font-size: 0.75rem;
   font-weight: 600;
 
   ${(props) =>
-    props.status === "completed"
+    props.$status === "completed"
       ? `background-color: #d1fae5; color: #15803d;`
-      : props.status === "pending"
+      : props.$status === "pending"
       ? `background-color: #fef3c7; color: #92400e;`
       : `background-color: #fee2e2; color: #b91c1c;`}
 `;
@@ -175,6 +181,12 @@ export const Spinner = styled.div`
       transform: rotate(360deg);
     }
   }
+`;
+
+export const TableLoadingState = styled.div`
+  display: grid;
+  min-height: 9rem;
+  place-items: center;
 `;
 
 export const ErrorBox = styled.div`
@@ -216,6 +228,72 @@ export const PaginationButton = styled.button`
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+`;
+
+export const DialogOverlay = styled.div`
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background-color: rgba(17, 24, 39, 0.5);
+`;
+
+export const DialogContent = styled.div`
+  width: min(100%, 36rem);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border-radius: 0.5rem;
+  background-color: white;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+`;
+
+export const DialogHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+`;
+
+export const DialogCloseButton = styled.button`
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background-color: white;
+
+  &:hover {
+    background-color: #f3f4f6;
+  }
+`;
+
+export const DialogBody = styled.div`
+  padding: 1.25rem;
+`;
+
+export const DialogDetails = styled.dl`
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.375rem;
+  margin: 0;
+
+  div {
+    display: grid;
+    gap: 0.375rem;
+  }
+
+  dt {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  dd {
+    margin: 0;
+    color: #4b5563;
   }
 `;
 
