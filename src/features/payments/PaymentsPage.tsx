@@ -13,10 +13,15 @@ const EMPTY_PAYMENTS: Payment[] = [];
 export const PaymentsPage = () => {
   const [paymentIdInput, setPaymentIdInput] = useState("");
   const [paymentIdSearch, setPaymentIdSearch] = useState("");
+  const [currencyInput, setCurrencyInput] = useState("");
+  const [currency, setCurrency] = useState("");
   const [searchError, setSearchError] = useState<string>();
 
-  const paymentsQuery = paymentIdSearch
-    ? { search: paymentIdSearch }
+  const paymentsQuery = paymentIdSearch || currency
+    ? {
+        ...(paymentIdSearch && { search: paymentIdSearch }),
+        ...(currency && { currency }),
+      }
     : INITIAL_PAYMENTS_QUERY;
 
   const { data, error, isPending } = useGetPayments(paymentsQuery);
@@ -32,7 +37,7 @@ export const PaymentsPage = () => {
   const handleSearch = () => {
     const formattedSearch = formatPaymentIdSearch(paymentIdInput);
 
-    if (!isValidPaymentIdSearch(formattedSearch)) {
+    if (formattedSearch && !isValidPaymentIdSearch(formattedSearch)) {
       setSearchError(I18N.INVALID_PAYMENT_ID);
       return;
     }
@@ -40,6 +45,7 @@ export const PaymentsPage = () => {
     setSearchError(undefined);
     setPaymentIdInput(formattedSearch);
     setPaymentIdSearch(formattedSearch);
+    setCurrency(currencyInput);
   };
 
   const handleSearchChange = (value: string) => {
@@ -47,9 +53,15 @@ export const PaymentsPage = () => {
     setSearchError(undefined);
   };
 
+  const handleCurrencyChange = (value: string) => {
+    setCurrencyInput(value);
+  };
+
   const handleClearFilters = () => {
     setPaymentIdInput("");
     setPaymentIdSearch("");
+    setCurrencyInput("");
+    setCurrency("");
     setSearchError(undefined);
   };
 
@@ -57,9 +69,11 @@ export const PaymentsPage = () => {
     <Container>
       <Title>{I18N.PAGE_TITLE}</Title>
       <PaymentsTable
-        hasActiveFilters={Boolean(paymentIdSearch)}
+        currencyValue={currencyInput}
+        hasActiveFilters={Boolean(paymentIdSearch || currency)}
         isLoading={isPending}
         onClearFilters={handleClearFilters}
+        onCurrencyChange={handleCurrencyChange}
         onSearch={handleSearch}
         onSearchChange={handleSearchChange}
         payments={data?.payments ?? EMPTY_PAYMENTS}

@@ -5,7 +5,9 @@ import {
   FilterRow,
   SearchButton,
   SearchInput,
+  Select,
 } from "../../components/components";
+import { CURRENCIES } from "../../constants";
 import { I18N } from "../../constants/i18n";
 
 interface PaymentsToolbarProps {
@@ -14,6 +16,8 @@ interface PaymentsToolbarProps {
   onSearch: () => void;
   validationError?: string;
   feedbackMessage?: string;
+  currencyValue?: string;
+  onCurrencyChange?: (value: string) => void;
   hasActiveFilters?: boolean;
   onClearFilters?: () => void;
 }
@@ -24,6 +28,8 @@ export const PaymentsToolbar = ({
   onSearch,
   validationError,
   feedbackMessage,
+  currencyValue,
+  onCurrencyChange,
   hasActiveFilters = false,
   onClearFilters,
 }: PaymentsToolbarProps) => {
@@ -44,6 +50,20 @@ export const PaymentsToolbar = ({
           type="search"
           value={searchValue}
         />
+        {currencyValue !== undefined && onCurrencyChange && (
+          <Select
+            aria-label={I18N.CURRENCY_FILTER_LABEL}
+            onChange={(event) => onCurrencyChange(event.target.value)}
+            value={currencyValue}
+          >
+            <option value="">{I18N.CURRENCIES_OPTION}</option>
+            {CURRENCIES.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            ))}
+          </Select>
+        )}
         <SearchButton type="submit">{I18N.SEARCH_BUTTON}</SearchButton>
         {hasActiveFilters && onClearFilters && (
           <ClearButton onClick={onClearFilters} type="button">

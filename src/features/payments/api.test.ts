@@ -66,6 +66,34 @@ describe("getPayments", () => {
     expect(receivedPageSize).toBeNull();
   });
 
+  test("sends only the currency parameter for a currency filter", async () => {
+    let receivedCurrency: string | null = null;
+    let receivedPage: string | null = null;
+    let receivedPageSize: string | null = null;
+
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const url = new URL(request.url);
+        receivedCurrency = url.searchParams.get("currency");
+        receivedPage = url.searchParams.get("page");
+        receivedPageSize = url.searchParams.get("pageSize");
+
+        return HttpResponse.json({
+          payments: [mockPayments134[0]],
+          total: 1,
+          page: 1,
+          pageSize: 1,
+        });
+      }),
+    );
+
+    await getPayments({ currency: "USD" });
+
+    expect(receivedCurrency).toBe("USD");
+    expect(receivedPage).toBeNull();
+    expect(receivedPageSize).toBeNull();
+  });
+
   test("throws a typed error for an unsuccessful response", async () => {
     server.use(
       http.get(`*${API_URL}`, () =>

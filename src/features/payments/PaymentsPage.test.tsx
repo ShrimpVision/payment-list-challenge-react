@@ -142,6 +142,44 @@ describe("PaymentsPage", () => {
     expect(await screen.findByText("pay_134_2")).toBeInTheDocument();
   });
 
+  test("filters by currency and clears the selected currency", async () => {
+    const receivedCurrencies: Array<string | null> = [];
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const currency = new URL(request.url).searchParams.get("currency");
+        receivedCurrencies.push(currency);
+        const payments = currency === "USD" ? [mockPayments134[0]] : [mockPayments134[1]];
+
+        return HttpResponse.json({
+          payments,
+          total: payments.length,
+          page: 1,
+          pageSize: 5,
+        });
+      }),
+    );
+
+    renderPaymentsPage();
+
+    await screen.findByText("pay_134_2");
+    const currencySelect = screen.getByRole("combobox", {
+      name: I18N.CURRENCY_FILTER_LABEL,
+    });
+    fireEvent.change(currencySelect, { target: { value: "USD" } });
+
+    expect(receivedCurrencies).toEqual([null]);
+
+    fireEvent.click(screen.getByRole("button", { name: I18N.SEARCH_BUTTON }));
+
+    expect(await screen.findByText("pay_134_1")).toBeInTheDocument();
+    expect(receivedCurrencies).toEqual([null, "USD"]);
+
+    fireEvent.click(screen.getByRole("button", { name: I18N.CLEAR_FILTERS }));
+
+    expect(currencySelect).toHaveValue("");
+    expect(await screen.findByText("pay_134_2")).toBeInTheDocument();
+  });
+
   test("shows a 4xx search error without rendering the table", async () => {
     server.use(
       http.get(`*${API_URL}`, ({ request }) => {

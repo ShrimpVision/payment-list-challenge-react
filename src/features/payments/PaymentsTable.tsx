@@ -12,6 +12,8 @@ interface PaymentsTableProps {
   validationError?: string;
   onSearchChange?: (value: string) => void;
   onSearch?: () => void;
+  currencyValue?: string;
+  onCurrencyChange?: (value: string) => void;
   hasActiveFilters?: boolean;
   onClearFilters?: () => void;
   requestError?: string;
@@ -59,6 +61,8 @@ export const PaymentsTable = ({
   validationError,
   onSearchChange,
   onSearch,
+  currencyValue,
+  onCurrencyChange,
   hasActiveFilters,
   onClearFilters,
   requestError,
@@ -70,6 +74,8 @@ export const PaymentsTable = ({
         onSearch={onSearch}
         onSearchChange={onSearchChange}
         feedbackMessage={feedbackMessage}
+        currencyValue={currencyValue}
+        onCurrencyChange={onCurrencyChange}
         searchValue={searchValue}
         validationError={validationError}
         hasActiveFilters={hasActiveFilters}

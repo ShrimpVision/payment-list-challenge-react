@@ -6,12 +6,14 @@ export interface GetPaymentsParams {
   page?: number;
   pageSize?: number;
   search?: string;
+  currency?: string;
 }
 
 export const getPayments = async ({
   page,
   pageSize,
   search,
+  currency,
 }: GetPaymentsParams): Promise<GetPaymentsResponse> => {
   const queryParams = new URLSearchParams();
 
@@ -25,6 +27,10 @@ export const getPayments = async ({
 
   if (search) {
     queryParams.set("search", search);
+  }
+
+  if (currency) {
+    queryParams.set("currency", currency);
   }
   const response = await fetch(`${API_URL}?${queryParams.toString()}`);
 
