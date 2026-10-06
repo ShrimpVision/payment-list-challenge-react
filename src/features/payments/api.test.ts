@@ -94,6 +94,31 @@ describe("getPayments", () => {
     expect(receivedPageSize).toBeNull();
   });
 
+  test("sends payment ID and currency parameters together", async () => {
+    let receivedSearch: string | null = null;
+    let receivedCurrency: string | null = null;
+
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const url = new URL(request.url);
+        receivedSearch = url.searchParams.get("search");
+        receivedCurrency = url.searchParams.get("currency");
+
+        return HttpResponse.json({
+          payments: [mockPayments134[0]],
+          total: 1,
+          page: 1,
+          pageSize: 1,
+        });
+      }),
+    );
+
+    await getPayments({ search: "pay_134", currency: "USD" });
+
+    expect(receivedSearch).toBe("pay_134");
+    expect(receivedCurrency).toBe("USD");
+  });
+
   test("throws a typed error for an unsuccessful response", async () => {
     server.use(
       http.get(`*${API_URL}`, () =>

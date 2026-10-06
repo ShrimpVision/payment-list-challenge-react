@@ -180,6 +180,53 @@ describe("PaymentsPage", () => {
     expect(await screen.findByText("pay_134_2")).toBeInTheDocument();
   });
 
+  test("submits payment ID and currency filters together", async () => {
+    const receivedFilters: Array<{ currency: string | null; search: string | null }> = [];
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const url = new URL(request.url);
+        const filters = {
+          currency: url.searchParams.get("currency"),
+          search: url.searchParams.get("search"),
+        };
+        receivedFilters.push(filters);
+
+        const payments =
+          filters.search === "pay_134" && filters.currency === "USD"
+            ? [mockPayments134[0]]
+            : [mockPayments134[1]];
+
+        return HttpResponse.json({
+          payments,
+          total: payments.length,
+          page: 1,
+          pageSize: 5,
+        });
+      }),
+    );
+
+    renderPaymentsPage();
+
+    await screen.findByText("pay_134_2");
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search payments" }), {
+      target: { value: "pay_134" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: I18N.SEARCH_BUTTON }));
+
+    await screen.findByText("pay_134_2");
+    fireEvent.change(screen.getByRole("combobox", { name: I18N.CURRENCY_FILTER_LABEL }), {
+      target: { value: "USD" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: I18N.SEARCH_BUTTON }));
+
+    expect(await screen.findByText("pay_134_1")).toBeInTheDocument();
+    expect(receivedFilters).toEqual([
+      { currency: null, search: null },
+      { currency: null, search: "pay_134" },
+      { currency: "USD", search: "pay_134" },
+    ]);
+  });
+
   test("shows a 4xx search error without rendering the table", async () => {
     server.use(
       http.get(`*${API_URL}`, ({ request }) => {
