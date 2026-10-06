@@ -2,10 +2,10 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { format } from "date-fns";
 import { describe, expect, test } from "vitest";
-import { I18N } from "../../constants/i18n";
-import { mockPayments134 } from "../../mocks/mockPaymentsData";
-import type { Payment } from "../../types/payment";
-import { PaymentsTable } from "./PaymentsTable";
+import { I18N } from "../../../constants/i18n";
+import { mockPayments134 } from "../../../mocks/mockPaymentsData";
+import type { Payment } from "../../../types/payment";
+import { PaymentsTable } from "../components/PaymentsTable";
 
 describe("PaymentsTable", () => {
   test("renders payment values with their payment-specific formatting", () => {

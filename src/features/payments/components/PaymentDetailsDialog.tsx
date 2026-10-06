@@ -6,10 +6,10 @@ import {
   DialogDetails,
   DialogHeader,
   DialogOverlay,
-} from "../../components/components";
-import { I18N } from "../../constants/i18n";
-import type { Payment } from "../../types/payment";
-import { formatAmount, formatPaymentDate } from "./formatters";
+} from "../../../components/components";
+import { I18N } from "../../../constants/i18n";
+import type { Payment } from "../../../types/payment";
+import { formatAmount, formatPaymentDate } from "../utils/formatters";
 
 interface PaymentDetailsDialogProps {
   payment: Payment;

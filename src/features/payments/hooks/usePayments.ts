@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPayments, type GetPaymentsParams } from "./api";
+import { getPayments, type GetPaymentsParams } from "../api";
 
 export const BASE_QUERY_CONFIG = {
   staleTime: 30_000,

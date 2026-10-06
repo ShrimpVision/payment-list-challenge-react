@@ -3,11 +3,11 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { delay, http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
-import { API_URL } from "../../constants";
-import { I18N } from "../../constants/i18n";
-import { server } from "../../mocks/node";
-import { mockPayments134 } from "../../mocks/mockPaymentsData";
-import { PaymentsPage } from "./PaymentsPage";
+import { API_URL } from "../../../constants";
+import { I18N } from "../../../constants/i18n";
+import { server } from "../../../mocks/node";
+import { mockPayments134 } from "../../../mocks/mockPaymentsData";
+import { PaymentsPage } from "../PaymentsPage";
 
 const firstPageResponse = {
   payments: mockPayments134,
@@ -52,7 +52,7 @@ describe("PaymentsPage", () => {
     renderPaymentsPage();
 
     expect(await screen.findByText("pay_134_1")).toBeInTheDocument();
-    expect(screen.getAllByRole("button", { name: /pay_134_/i })).toHaveLength(5);
+    expect(screen.getAllByRole("row")).toHaveLength(6);
   });
 
   test("opens payment details from a table row and closes them with Escape", async () => {
@@ -61,7 +61,7 @@ describe("PaymentsPage", () => {
     renderPaymentsPage();
 
     await screen.findByText("pay_134_1");
-    fireEvent.click(screen.getByRole("button", { name: /pay_134_1/i }));
+    fireEvent.click(screen.getByRole("row", { name: /pay_134_1/i }));
 
     const dialog = screen.getByRole("dialog", { name: /payment details: pay_134_1/i });
     expect(dialog).toBeInTheDocument();

@@ -1,5 +1,5 @@
-import { PaginationButton, PaginationRow } from "../../components/components";
-import { I18N } from "../../constants/i18n";
+import { PaginationButton, PaginationRow } from "../../../components/components";
+import { I18N } from "../../../constants/i18n";
 
 interface PaymentsPaginationProps {
   page: number;

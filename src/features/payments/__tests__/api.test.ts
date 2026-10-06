@@ -1,10 +1,10 @@
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { http, HttpResponse } from "msw";
-import { API_URL } from "../../constants";
-import { server } from "../../mocks/node";
-import { mockPayments134 } from "../../mocks/mockPaymentsData";
-import { GetPaymentsApiError } from "./errors";
-import { getPayments } from "./api";
+import { API_URL } from "../../../constants";
+import { server } from "../../../mocks/node";
+import { mockPayments134 } from "../../../mocks/mockPaymentsData";
+import { getPayments } from "../api";
+import { GetPaymentsApiError } from "../utils/errors";
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());

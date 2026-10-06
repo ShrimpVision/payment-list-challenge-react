@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
-import { DataTable, type DataTableColumn } from "../../components/DataTable";
-import { ErrorBox, StatusBadge } from "../../components/components";
-import { I18N } from "../../constants/i18n";
-import type { Payment } from "../../types/payment";
-import { formatAmount, formatPaymentDate } from "./formatters";
+import { DataTable, type DataTableColumn } from "../../../components/DataTable";
+import { ErrorBox, StatusBadge } from "../../../components/components";
+import { I18N } from "../../../constants/i18n";
+import type { Payment } from "../../../types/payment";
+import { formatAmount, formatPaymentDate } from "../utils/formatters";
 import { PaymentsToolbar } from "./PaymentsToolbar";
 
 interface PaymentsTableProps {

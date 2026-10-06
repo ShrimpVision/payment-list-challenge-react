@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Container, Title } from "../../components/components";
 import { I18N } from "../../constants/i18n";
 import type { Payment } from "../../types/payment";
-import { PaymentDetailsDialog } from "./PaymentDetailsDialog";
-import { PaymentsPagination } from "./PaymentsPagination";
-import { PaymentsTable } from "./PaymentsTable";
-import { usePaymentsPage } from "./usePaymentsPage";
+import { PaymentDetailsDialog } from "./components/PaymentDetailsDialog";
+import { PaymentsPagination } from "./components/PaymentsPagination";
+import { PaymentsTable } from "./components/PaymentsTable";
+import { usePaymentsPage } from "./hooks/usePaymentsPage";
 
 export const PaymentsPage = () => {
   const [selectedPayment, setSelectedPayment] = useState<Payment>();

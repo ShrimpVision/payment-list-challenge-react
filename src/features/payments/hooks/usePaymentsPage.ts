@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { I18N } from "../../constants/i18n";
-import type { Payment } from "../../types/payment";
-import { isInternalServerError, isNotFoundError } from "./errors";
-import { formatPaymentIdSearch, isValidPaymentIdSearch } from "./search";
+import { I18N } from "../../../constants/i18n";
+import type { Payment } from "../../../types/payment";
+import { isInternalServerError, isNotFoundError } from "../utils/errors";
+import { formatPaymentIdSearch, isValidPaymentIdSearch } from "../utils/search";
 import { useGetPayments } from "./usePayments";
 
 const DEFAULT_PAGE = 1;

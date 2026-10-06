@@ -6,9 +6,9 @@ import {
   SearchButton,
   SearchInput,
   Select,
-} from "../../components/components";
-import { CURRENCIES } from "../../constants";
-import { I18N } from "../../constants/i18n";
+} from "../../../components/components";
+import { CURRENCIES } from "../../../constants";
+import { I18N } from "../../../constants/i18n";
 
 interface PaymentsToolbarProps {
   searchValue: string;

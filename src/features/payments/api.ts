@@ -1,6 +1,6 @@
 import { API_URL } from "../../constants";
 import type { GetPaymentsResponse } from "../../types/payment";
-import { GetPaymentsApiError } from "./errors";
+import { GetPaymentsApiError } from "./utils/errors";
 
 export interface GetPaymentsParams {
   page?: number;

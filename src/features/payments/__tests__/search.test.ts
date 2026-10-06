@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { formatPaymentIdSearch, isValidPaymentIdSearch } from "./search";
+import { formatPaymentIdSearch, isValidPaymentIdSearch } from "../utils/search";
 
 describe("payment ID search validation", () => {
   test.each(["pay_", "pay_123", "pay_abc", "pay_abc_123", "PAY_134_1"])(

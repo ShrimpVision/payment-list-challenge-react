@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, test, vi } from "vitest";
-import { CURRENCIES } from "../../constants";
-import { I18N } from "../../constants/i18n";
-import { PaymentsToolbar } from "./PaymentsToolbar";
+import { CURRENCIES } from "../../../constants";
+import { I18N } from "../../../constants/i18n";
+import { PaymentsToolbar } from "../components/PaymentsToolbar";
 
 describe("PaymentsToolbar", () => {
   test("renders an accessible payment search form and submits it", () => {
