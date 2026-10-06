@@ -36,4 +36,32 @@ describe("getPayments", () => {
     expect(response.payments).toEqual(mockPayments134);
     expect(response).toMatchObject({ total: 5, page: 1, pageSize: 5 });
   });
+
+  test("sends only the search parameter for a payment ID search", async () => {
+    let receivedPage: string | null = null;
+    let receivedPageSize: string | null = null;
+    let receivedSearch: string | null = null;
+
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const url = new URL(request.url);
+        receivedPage = url.searchParams.get("page");
+        receivedPageSize = url.searchParams.get("pageSize");
+        receivedSearch = url.searchParams.get("search");
+
+        return HttpResponse.json({
+          payments: [mockPayments134[0]],
+          total: 1,
+          page: 1,
+          pageSize: 1,
+        });
+      }),
+    );
+
+    await getPayments({ search: "pay_134_1" });
+
+    expect(receivedSearch).toBe("pay_134_1");
+    expect(receivedPage).toBeNull();
+    expect(receivedPageSize).toBeNull();
+  });
 });

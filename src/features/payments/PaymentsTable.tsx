@@ -3,10 +3,15 @@ import { StatusBadge } from "../../components/components";
 import { I18N } from "../../constants/i18n";
 import type { Payment } from "../../types/payment";
 import { formatAmount, formatPaymentDate } from "./formatters";
+import { PaymentsToolbar } from "./PaymentsToolbar";
 
 interface PaymentsTableProps {
   payments: Payment[];
   isLoading?: boolean;
+  searchValue?: string;
+  searchError?: string;
+  onSearchChange?: (value: string) => void;
+  onSearch?: () => void;
 }
 
 const paymentColumns: DataTableColumn<Payment>[] = [
@@ -44,12 +49,32 @@ const paymentColumns: DataTableColumn<Payment>[] = [
   },
 ];
 
-export const PaymentsTable = ({ payments, isLoading }: PaymentsTableProps) => (
-  <DataTable
-    columns={paymentColumns}
-    data={payments}
-    emptyMessage={I18N.NO_PAYMENTS_FOUND}
-    getRowKey={(payment) => payment.id}
-    isLoading={isLoading}
-  />
-);
+export const PaymentsTable = ({
+  payments,
+  isLoading,
+  searchValue,
+  searchError,
+  onSearchChange,
+  onSearch,
+}: PaymentsTableProps) => {
+  const toolbar =
+    searchValue !== undefined && onSearchChange && onSearch ? (
+      <PaymentsToolbar
+        onSearch={onSearch}
+        onSearchChange={onSearchChange}
+        searchError={searchError}
+        searchValue={searchValue}
+      />
+    ) : undefined;
+
+  return (
+    <DataTable
+      columns={paymentColumns}
+      data={payments}
+      emptyMessage={I18N.NO_PAYMENTS_FOUND}
+      getRowKey={(payment) => payment.id}
+      isLoading={isLoading}
+      toolbar={toolbar}
+    />
+  );
+};

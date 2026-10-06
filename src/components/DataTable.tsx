@@ -26,6 +26,7 @@ interface DataTableProps<T> {
   emptyMessage: ReactNode;
   isLoading?: boolean;
   onRowClick?: (row: T) => void;
+  toolbar?: ReactNode;
 }
 
 export const DataTable = <T,>({
@@ -35,6 +36,7 @@ export const DataTable = <T,>({
   emptyMessage,
   isLoading = false,
   onRowClick,
+  toolbar,
 }: DataTableProps<T>) => {
   const handleRowKeyDown = (event: KeyboardEvent<HTMLTableRowElement>, row: T) => {
     if (event.key === "Enter" || event.key === " ") {
@@ -44,47 +46,50 @@ export const DataTable = <T,>({
   };
 
   return (
-    <TableWrapper>
-      <Table>
-        <TableHeaderWrapper>
-          <TableHeaderRow>
-            {columns.map((column) => (
-              <TableHeader key={column.id} scope="col">
-                {column.header}
-              </TableHeader>
-            ))}
-          </TableHeaderRow>
-        </TableHeaderWrapper>
-        <TableBodyWrapper>
-          {!isLoading &&
-            (data.length === 0 ? (
-              <tr>
-                <TableCell colSpan={columns.length}>
-                  <EmptyBox>{emptyMessage}</EmptyBox>
-                </TableCell>
-              </tr>
-            ) : (
-              data.map((row) => (
-                <TableRow
-                  key={getRowKey(row)}
-                  onClick={onRowClick ? () => onRowClick(row) : undefined}
-                  onKeyDown={onRowClick ? (event) => handleRowKeyDown(event, row) : undefined}
-                  role={onRowClick ? "button" : undefined}
-                  tabIndex={onRowClick ? 0 : undefined}
-                >
-                  {columns.map((column) => (
-                    <TableCell key={column.id}>{column.cell(row)}</TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ))}
-        </TableBodyWrapper>
-      </Table>
-      {isLoading && (
-        <TableLoadingState>
-          <Spinner aria-label="Loading" role="status" />
-        </TableLoadingState>
-      )}
-    </TableWrapper>
+    <>
+      {toolbar}
+      <TableWrapper>
+        <Table>
+          <TableHeaderWrapper>
+            <TableHeaderRow>
+              {columns.map((column) => (
+                <TableHeader key={column.id} scope="col">
+                  {column.header}
+                </TableHeader>
+              ))}
+            </TableHeaderRow>
+          </TableHeaderWrapper>
+          <TableBodyWrapper>
+            {!isLoading &&
+              (data.length === 0 ? (
+                <tr>
+                  <TableCell colSpan={columns.length}>
+                    <EmptyBox>{emptyMessage}</EmptyBox>
+                  </TableCell>
+                </tr>
+              ) : (
+                data.map((row) => (
+                  <TableRow
+                    key={getRowKey(row)}
+                    onClick={onRowClick ? () => onRowClick(row) : undefined}
+                    onKeyDown={onRowClick ? (event) => handleRowKeyDown(event, row) : undefined}
+                    role={onRowClick ? "button" : undefined}
+                    tabIndex={onRowClick ? 0 : undefined}
+                  >
+                    {columns.map((column) => (
+                      <TableCell key={column.id}>{column.cell(row)}</TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ))}
+          </TableBodyWrapper>
+        </Table>
+        {isLoading && (
+          <TableLoadingState>
+            <Spinner aria-label="Loading" role="status" />
+          </TableLoadingState>
+        )}
+      </TableWrapper>
+    </>
   );
 };

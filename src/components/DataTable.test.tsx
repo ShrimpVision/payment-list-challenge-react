@@ -65,6 +65,13 @@ describe("DataTable", () => {
     expect(screen.queryByText("No users found")).not.toBeInTheDocument();
   });
 
+  test("renders optional toolbar content above the table", () => {
+    renderTable({ toolbar: <button type="button">Filter users</button> });
+
+    expect(screen.getByRole("button", { name: "Filter users" })).toBeInTheDocument();
+    expect(screen.getByRole("table")).toBeInTheDocument();
+  });
+
   test("keeps rows non-interactive without an onRowClick callback", () => {
     renderTable();
 
