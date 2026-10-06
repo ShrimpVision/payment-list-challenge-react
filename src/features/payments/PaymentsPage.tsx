@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Container, Title } from "../../components/components";
 import { I18N } from "../../constants/i18n";
 import type { Payment } from "../../types/payment";
-import { isNotFoundError } from "./errors";
+import { isInternalServerError, isNotFoundError } from "./errors";
 import { PaymentsTable } from "./PaymentsTable";
 import { formatPaymentIdSearch, isValidPaymentIdSearch } from "./search";
 import { useGetPayments } from "./usePayments";
@@ -24,7 +24,9 @@ export const PaymentsPage = () => {
   const errorMessage = error
     ? isNotFoundError(error)
       ? I18N.PAYMENT_NOT_FOUND
-      : I18N.SOMETHING_WENT_WRONG
+      : isInternalServerError(error)
+        ? I18N.INTERNAL_SERVER_ERROR
+        : I18N.SOMETHING_WENT_WRONG
     : undefined;
 
   const handleSearch = () => {

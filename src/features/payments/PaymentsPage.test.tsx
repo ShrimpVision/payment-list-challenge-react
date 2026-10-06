@@ -173,7 +173,7 @@ describe("PaymentsPage", () => {
     expect(screen.getByRole("button", { name: I18N.CLEAR_FILTERS })).toBeInTheDocument();
   });
 
-  test("shows a generic error for a non-404 response without rendering the table", async () => {
+  test("shows an internal server error for a 500 response without rendering the table", async () => {
     server.use(
       http.get(`*${API_URL}`, ({ request }) => {
         const search = new URL(request.url).searchParams.get("search");
@@ -199,11 +199,41 @@ describe("PaymentsPage", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Search" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(I18N.SOMETHING_WENT_WRONG);
+    expect(await screen.findByRole("alert")).toHaveTextContent(I18N.INTERNAL_SERVER_ERROR);
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     expect(screen.getByRole("searchbox", { name: "Search payments" })).not.toHaveAttribute(
       "aria-invalid",
       "true",
     );
+  });
+
+  test("shows a generic error for a non-404 or 500 response without rendering the table", async () => {
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const search = new URL(request.url).searchParams.get("search");
+
+        if (search === "pay_503") {
+          return HttpResponse.json({ message: "Service unavailable" }, { status: 503 });
+        }
+
+        return HttpResponse.json({
+          payments: [mockPayments134[0]],
+          total: 1,
+          page: 1,
+          pageSize: 5,
+        });
+      }),
+    );
+
+    renderPaymentsPage();
+
+    await screen.findByText("pay_134_1");
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search payments" }), {
+      target: { value: "pay_503" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(I18N.SOMETHING_WENT_WRONG);
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 });
