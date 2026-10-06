@@ -12,6 +12,8 @@ interface PaymentsTableProps {
   searchError?: string;
   onSearchChange?: (value: string) => void;
   onSearch?: () => void;
+  hasActiveFilters?: boolean;
+  onClearFilters?: () => void;
 }
 
 const paymentColumns: DataTableColumn<Payment>[] = [
@@ -56,6 +58,8 @@ export const PaymentsTable = ({
   searchError,
   onSearchChange,
   onSearch,
+  hasActiveFilters,
+  onClearFilters,
 }: PaymentsTableProps) => {
   const toolbar =
     searchValue !== undefined && onSearchChange && onSearch ? (
@@ -64,6 +68,8 @@ export const PaymentsTable = ({
         onSearchChange={onSearchChange}
         searchError={searchError}
         searchValue={searchValue}
+        hasActiveFilters={hasActiveFilters}
+        onClearFilters={onClearFilters}
       />
     ) : undefined;
 

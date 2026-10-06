@@ -23,4 +23,32 @@ describe("PaymentsToolbar", () => {
     expect(onSearchChange).toHaveBeenCalledWith("pay_134_1");
     expect(onSearch).toHaveBeenCalledOnce();
   });
+
+  test("shows Clear Filters only when filters are active", () => {
+    const onClearFilters = vi.fn();
+    const { rerender } = render(
+      <PaymentsToolbar
+        hasActiveFilters={false}
+        onClearFilters={onClearFilters}
+        onSearch={vi.fn()}
+        onSearchChange={vi.fn()}
+        searchValue=""
+      />,
+    );
+
+    expect(screen.queryByRole("button", { name: I18N.CLEAR_FILTERS })).not.toBeInTheDocument();
+
+    rerender(
+      <PaymentsToolbar
+        hasActiveFilters
+        onClearFilters={onClearFilters}
+        onSearch={vi.fn()}
+        onSearchChange={vi.fn()}
+        searchValue="pay_134_1"
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: I18N.CLEAR_FILTERS }));
+
+    expect(onClearFilters).toHaveBeenCalledOnce();
+  });
 });

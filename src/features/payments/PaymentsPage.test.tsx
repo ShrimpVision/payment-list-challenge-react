@@ -110,4 +110,35 @@ describe("PaymentsPage", () => {
       "true",
     );
   });
+
+  test("clears the submitted search and restores the initial payments", async () => {
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const search = new URL(request.url).searchParams.get("search");
+        const payments = search ? [mockPayments134[0]] : [mockPayments134[1]];
+
+        return HttpResponse.json({
+          payments,
+          total: payments.length,
+          page: 1,
+          pageSize: 5,
+        });
+      }),
+    );
+
+    renderPaymentsPage();
+
+    await screen.findByText("pay_134_2");
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search payments" }), {
+      target: { value: "pay_134_1" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Search" }));
+
+    await screen.findByText("pay_134_1");
+    fireEvent.click(screen.getByRole("button", { name: I18N.CLEAR_FILTERS }));
+
+    expect(screen.getByRole("searchbox", { name: "Search payments" })).toHaveValue("");
+    expect(screen.queryByRole("button", { name: I18N.CLEAR_FILTERS })).not.toBeInTheDocument();
+    expect(await screen.findByText("pay_134_2")).toBeInTheDocument();
+  });
 });

@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 import {
+  ClearButton,
   ErrorBox,
   FilterRow,
   SearchButton,
@@ -12,6 +13,8 @@ interface PaymentsToolbarProps {
   onSearchChange: (value: string) => void;
   onSearch: () => void;
   searchError?: string;
+  hasActiveFilters?: boolean;
+  onClearFilters?: () => void;
 }
 
 export const PaymentsToolbar = ({
@@ -19,6 +22,8 @@ export const PaymentsToolbar = ({
   onSearchChange,
   onSearch,
   searchError,
+  hasActiveFilters = false,
+  onClearFilters,
 }: PaymentsToolbarProps) => {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,6 +43,11 @@ export const PaymentsToolbar = ({
           value={searchValue}
         />
         <SearchButton type="submit">{I18N.SEARCH_BUTTON}</SearchButton>
+        {hasActiveFilters && onClearFilters && (
+          <ClearButton onClick={onClearFilters} type="button">
+            {I18N.CLEAR_FILTERS}
+          </ClearButton>
+        )}
       </FilterRow>
       {searchError && (
         <ErrorBox id="payment-id-search-error" role="alert">

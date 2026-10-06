@@ -36,11 +36,19 @@ export const PaymentsPage = () => {
     setSearchError(undefined);
   };
 
+  const handleClearFilters = () => {
+    setPaymentIdInput("");
+    setPaymentIdSearch("");
+    setSearchError(undefined);
+  };
+
   return (
     <Container>
       <Title>{I18N.PAGE_TITLE}</Title>
       <PaymentsTable
+        hasActiveFilters={Boolean(paymentIdSearch)}
         isLoading={isPending}
+        onClearFilters={handleClearFilters}
         onSearch={handleSearch}
         onSearchChange={handleSearchChange}
         payments={data?.payments ?? EMPTY_PAYMENTS}
