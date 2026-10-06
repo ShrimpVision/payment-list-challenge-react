@@ -1,0 +1,39 @@
+import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
+import { http, HttpResponse } from "msw";
+import { API_URL } from "../../constants";
+import { server } from "../../mocks/node";
+import { mockPayments134 } from "../../mocks/mockPaymentsData";
+import { getPayments } from "./api";
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
+describe("getPayments", () => {
+  test("sends pagination as URL search parameters and returns the API response", async () => {
+    let receivedPage: string | null = null;
+    let receivedPageSize: string | null = null;
+
+    server.use(
+      http.get(`*${API_URL}`, ({ request }) => {
+        const url = new URL(request.url);
+        receivedPage = url.searchParams.get("page");
+        receivedPageSize = url.searchParams.get("pageSize");
+
+        return HttpResponse.json({
+          payments: mockPayments134,
+          total: mockPayments134.length,
+          page: 1,
+          pageSize: 5,
+        });
+      }),
+    );
+
+    const response = await getPayments({ page: 1, pageSize: 5 });
+
+    expect(receivedPage).toBe("1");
+    expect(receivedPageSize).toBe("5");
+    expect(response.payments).toEqual(mockPayments134);
+    expect(response).toMatchObject({ total: 5, page: 1, pageSize: 5 });
+  });
+});

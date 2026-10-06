@@ -9,3 +9,10 @@ export interface Payment {
   description?: string;
   clientId?: string;
 }
+
+export interface GetPaymentsResponse {
+  payments: Payment[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

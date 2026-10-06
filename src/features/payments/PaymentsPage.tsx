@@ -1,11 +1,19 @@
 import { Container, Title } from "../../components/components";
 import { I18N } from "../../constants/i18n";
-import { mockPayments134 } from "../../mocks/mockPaymentsData";
+import type { Payment } from "../../types/payment";
 import { PaymentsTable } from "./PaymentsTable";
+import { useGetPayments } from "./usePayments";
 
-export const PaymentsPage = () => (
-  <Container>
-    <Title>{I18N.PAGE_TITLE}</Title>
-    <PaymentsTable payments={mockPayments134} />
-  </Container>
-);
+const INITIAL_PAYMENTS_QUERY = { page: 1, pageSize: 5 };
+const EMPTY_PAYMENTS: Payment[] = [];
+
+export const PaymentsPage = () => {
+  const { data, isPending } = useGetPayments(INITIAL_PAYMENTS_QUERY);
+
+  return (
+    <Container>
+      <Title>{I18N.PAGE_TITLE}</Title>
+      <PaymentsTable isLoading={isPending} payments={data?.payments ?? EMPTY_PAYMENTS} />
+    </Container>
+  );
+};

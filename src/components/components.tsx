@@ -177,6 +177,12 @@ export const Spinner = styled.div`
   }
 `;
 
+export const TableLoadingState = styled.div`
+  display: grid;
+  min-height: 9rem;
+  place-items: center;
+`;
+
 export const ErrorBox = styled.div`
   padding: 1rem;
   margin-bottom: 1rem;

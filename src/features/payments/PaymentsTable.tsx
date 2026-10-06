@@ -6,6 +6,7 @@ import { formatAmount, formatPaymentDate } from "./formatters";
 
 interface PaymentsTableProps {
   payments: Payment[];
+  isLoading?: boolean;
 }
 
 const paymentColumns: DataTableColumn<Payment>[] = [
@@ -43,11 +44,12 @@ const paymentColumns: DataTableColumn<Payment>[] = [
   },
 ];
 
-export const PaymentsTable = ({ payments }: PaymentsTableProps) => (
+export const PaymentsTable = ({ payments, isLoading }: PaymentsTableProps) => (
   <DataTable
     columns={paymentColumns}
     data={payments}
     emptyMessage={I18N.NO_PAYMENTS_FOUND}
     getRowKey={(payment) => payment.id}
+    isLoading={isLoading}
   />
 );

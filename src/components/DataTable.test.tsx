@@ -57,6 +57,14 @@ describe("DataTable", () => {
     expect(screen.queryByText("Ada Lovelace")).not.toBeInTheDocument();
   });
 
+  test("renders a loading state instead of rows or the empty message", () => {
+    renderTable({ data: [], isLoading: true });
+
+    expect(screen.getByRole("columnheader", { name: "Name" })).toBeInTheDocument();
+    expect(screen.getByRole("status", { name: "Loading" })).toBeInTheDocument();
+    expect(screen.queryByText("No users found")).not.toBeInTheDocument();
+  });
+
   test("keeps rows non-interactive without an onRowClick callback", () => {
     renderTable();
 
